@@ -16,3 +16,13 @@ public class Card : ScriptableObject
     public float bulletSizeMult = 1f;
     // ... reflectBullets, hookshot, explosionOnHit, doubleJump, etc.
 }
+// CardDatabase.cs (put on GameManager or static)
+public class CardDatabase : MonoBehaviour
+{
+    public Card[] allCards; // drag in editor
+
+    public Card GetRandomCard()
+    {
+        return allCards[Random.Range(0, allCards.Length)];
+    }
+}
