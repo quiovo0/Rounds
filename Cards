@@ -1,0 +1,18 @@
+// Card.cs (ScriptableObject)
+using UnityEngine;
+
+[CreateAssetMenu(fileName = "New Card", menuName = "Rounds/Card")]
+public class Card : ScriptableObject
+{
+    public string cardName;
+    public string description;
+    public Sprite icon;
+
+    // Example effects (expand this a lot!)
+    public float bulletSpeedMult = 1f;
+    public int extraBullets = 0;
+    public bool homing = false;
+    public float dashForce = 0f;
+    public float bulletSizeMult = 1f;
+    // ... reflectBullets, hookshot, explosionOnHit, doubleJump, etc.
+}
