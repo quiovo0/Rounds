@@ -1,0 +1,62 @@
+// RoundManager.cs (singleton or on empty GameObject)
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+public class RoundManager : MonoBehaviour
+{
+    public static RoundManager Instance;
+
+    public PlayerController player1, player2;
+    public int scoreP1, scoreP2;
+    public int roundsToWin = 5;
+
+    private bool roundActive = true;
+
+    void Awake() => Instance = this;
+
+    public void ReportDeath(PlayerController loser)
+    {
+        if (!roundActive) return;
+        roundActive = false;
+
+        if (loser == player1)
+            scoreP2++;
+        else
+            scoreP1++;
+
+        CheckWin();
+
+        // Loser picks card
+        PlayerController upgradeReceiver = (loser == player1) ? player1 : player2;
+
+        // TODO: switch to Card Selection scene / UI
+        // For minimal version → auto give random card (or pause & show UI)
+        Card newCard = FindObjectOfType<CardDatabase>().GetRandomCard();
+        ApplyCard(upgradeReceiver, newCard);
+
+        // Restart round after delay
+        Invoke(nameof(ResetRound), 2f);
+    }
+
+    void ApplyCard(PlayerController p, Card c)
+    {
+        // Example — in real game you'd have a list of modifiers per player
+        p.GetComponent<Gun>().ApplyUpgrade(c); // you'd need to expand Gun/PlayerController
+        // p.bulletSpeed *= c.bulletSpeedMult; etc.
+        Debug.Log($"{p.name} got {c.cardName}");
+    }
+
+    void ResetRound()
+    {
+        // Reset positions, health, velocities
+        player1.transform.position = new Vector3(-5, 0, 0);
+        player2.transform.position = new Vector3(5, 0, 0);
+        roundActive = true;
+    }
+
+    void CheckWin()
+    {
+        if (scoreP1 >= roundsToWin) Debug.Log("Player 1 wins match!");
+        if (scoreP2 >= roundsToWin) Debug.Log("Player 2 wins match!");
+    }
+}
