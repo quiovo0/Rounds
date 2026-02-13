@@ -1,80 +1,12 @@
-// PlayerController.cs
-using UnityEngine;
-
-[RequireComponent(typeof(Rigidbody2D))]
-public class PlayerController : MonoBehaviour
-{
-    public int playerIndex = 1;           // 1 or 2
-    public float moveSpeed = 6f;
-    public float jumpForce = 12f;
-    public Transform groundCheck;
-    public LayerMask groundLayer;
-
-    private Rigidbody2D rb;
-    private bool isGrounded;
-    private float facing = 1f;
-
-    // Shooting
-    public GameObject bulletPrefab;
-    public Transform firePoint;
-    public float bulletSpeed = 20f;
-    public float fireRate = 0.4f;
-    private float nextFireTime;
-
-    // Blocking
-    public bool isBlocking;
-    public float blockDuration = 0.6f;
-    private float blockTimer;
-
-    void Awake() => rb = GetComponent<Rigidbody2D>();
-
-    void Update()
-    {
-        // Movement
-        float move = Input.GetAxisRaw($"Horizontal_P{playerIndex}");
-        rb.velocity = new Vector2(move * moveSpeed, rb.velocity.y);
-
-        if (move != 0) facing = Mathf.Sign(move);
-        transform.localScale = new Vector3(facing, 1, 1);
-
-        // Jump
-        isGrounded = Physics2D.OverlapCircle(groundCheck.position, 0.2f, groundLayer);
-        if (Input.GetButtonDown($"Jump_P{playerIndex}") && isGrounded)
-            rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
-
-        // Shoot
-        if (Input.GetButtonDown($"Fire1_P{playerIndex}") && Time.time > nextFireTime)
-        {
-            nextFireTime = Time.time + fireRate;
-            Shoot();
-        }
-
-        // Block
-        if (Input.GetButtonDown($"Fire2_P{playerIndex}"))
-        {
-            isBlocking = true;
-            blockTimer = blockDuration;
-            // TODO: visual effect, scale up block collider, reflect bullets, etc.
-        }
-
-        if (isBlocking)
-        {
-            blockTimer -= Time.deltaTime;
-            if (blockTimer <= 0) isBlocking = false;
-        }
-    }
-
-    void Shoot()
-    {
-        GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
-        bullet.GetComponent<Rigidbody2D>().velocity = firePoint.right * bulletSpeed * facing;
-        // Later: apply upgrades (speed, count, homing, etc.)
-    }
-
-    // Call this from collision or health script
-    public void TakeDamage()
-    {
-        if (isBlocking) return; // for now — later: reflect, absorb, etc.
-        // Die / respawn logic → handled by RoundManager
-    }
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="refresh" content="0; url=rounds_enhanced.html">
+    <title>ROUNDS - Redirect</title>
+    <script>window.location.replace("rounds_enhanced.html");</script>
+</head>
+<body>
+    <p>Redirecting to <a href="rounds_enhanced.html">ROUNDS Enhanced</a>...</p>
+</body>
+</html>
